@@ -11,7 +11,7 @@
 #include <string>
 #include <vector>
 
-#include "../overlay.h"
+#include "overlay.h"
 #include "overlay_exe.h"
 
 #define UNUSED(x) ((void)x)

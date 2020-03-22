@@ -6,7 +6,7 @@
 #include "lib.h"
 #include <time.h>
 #include <GL/gl.h>
-#include "../3rdparty/GL/glext.h"
+#include "3rdparty/GL/glext.h"
 
 #define TDEF(ret, name, arg) typedef ret (__stdcall * t##name) arg
 #define GLDEF(ret, name, arg) TDEF(ret, name, arg); t##name o##name = NULL
