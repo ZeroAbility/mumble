@@ -253,16 +253,29 @@ if(grpc)
 endif()
 
 if(ice)
-	find_pkg(Ice
-		COMPONENTS
-			Ice
-			IceSSL
-		OPTIONAL_COMPONENTS
-			IceDiscovery
-			IceLocatorDiscovery
-			IceUtil
-		REQUIRED
-	)
+    if(cpp11)
+    	find_pkg(Ice
+            COMPONENTS
+                Ice++11
+                IceSSL++11
+            OPTIONAL_COMPONENTS
+                IceDiscovery++11
+                IceLocatorDiscovery++11
+                IceUtil
+            REQUIRED
+        )
+	else()
+        find_pkg(Ice
+            COMPONENTS
+                Ice
+                IceSSL
+            OPTIONAL_COMPONENTS
+                IceDiscovery
+                IceLocatorDiscovery
+                IceUtil
+            REQUIRED
+        )
+    endif()
 
 	if(Ice_VERSION_MAJOR LESS 3)
 		message(FATAL_ERROR "Unsupported Ice version, at least 3.0 is required.")
@@ -303,17 +316,32 @@ if(ice)
 			"USE_ICE"
 			"ICE_STATIC_LIBS"
 	)
+	
+	if(cpp11)
+        target_compile_definitions(murmur PRIVATE "ICE_CPP11_MAPPING")
+    endif()
 
 	target_include_directories(murmur PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
 
-	target_link_libraries(murmur
-		PRIVATE
-			Ice::Ice
-			Ice::IceSSL
-			$<TARGET_NAME_IF_EXISTS:Ice::IceDiscovery>
-			$<TARGET_NAME_IF_EXISTS:Ice::IceLocatorDiscovery>
-			$<TARGET_NAME_IF_EXISTS:Ice::IceUtil>
-	)
+	if(cpp11)
+        target_link_libraries(murmur
+            PRIVATE
+                Ice::Ice++11
+                Ice::IceSSL++11
+                $<TARGET_NAME_IF_EXISTS:Ice::IceDiscovery++11>
+                $<TARGET_NAME_IF_EXISTS:Ice::IceLocatorDiscovery++11>
+                $<TARGET_NAME_IF_EXISTS:Ice::IceUtil>
+        )
+	else()
+        target_link_libraries(murmur
+            PRIVATE
+                Ice::Ice
+                Ice::IceSSL
+                $<TARGET_NAME_IF_EXISTS:Ice::IceDiscovery>
+                $<TARGET_NAME_IF_EXISTS:Ice::IceLocatorDiscovery>
+                $<TARGET_NAME_IF_EXISTS:Ice::IceUtil>
+        )
+    endif()
 endif()
 
 if(WIN32)

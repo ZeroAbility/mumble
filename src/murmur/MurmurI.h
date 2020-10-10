@@ -9,7 +9,146 @@
 #include <Murmur.h>
 
 namespace Murmur {
+#ifdef ICE_CPP11_MAPPING // C++11 mapping
+class ServerI : virtual public Server {
+    virtual void isRunningAsync(::std::function<void (bool)> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void startAsync(::std::function<void ()> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void stopAsync(::std::function<void ()> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void deleteAsync(::std::function<void ()> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void addCallbackAsync(::std::shared_ptr<ServerCallbackPrx> cb, ::std::function<void ()> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void removeCallbackAsync(::std::shared_ptr<ServerCallbackPrx> cb, ::std::function<void ()> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void setAuthenticatorAsync(::std::shared_ptr<ServerAuthenticatorPrx> auth, ::std::function<void ()> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void idAsync(::std::function<void (int)> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void getConfAsync(::std::string key, ::std::function<void (const ::std::string &)> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void getAllConfAsync(::std::function<void (const ConfigMap &)> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void setConfAsync(::std::string key, ::std::string value, ::std::function<void ()> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void setSuperuserPasswordAsync(::std::string pw, ::std::function<void ()> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void getLogAsync(int first, int last, ::std::function<void (const LogList &)> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void getLogLenAsync(::std::function<void (int)> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void getUsersAsync(::std::function<void (const UserMap &)> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void getChannelsAsync(::std::function<void (const ChannelMap &)> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void getTreeAsync(::std::function<void (const ::std::shared_ptr<Tree> &)> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void getCertificateListAsync(int session, ::std::function<void (const CertificateList &)> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void getBansAsync(::std::function<void (const BanList &)> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void setBansAsync(Murmur::BanList bans, ::std::function<void ()> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void kickUserAsync(int session, ::std::string reason, ::std::function<void ()> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void sendMessageAsync(int session, ::std::string text, ::std::function<void ()> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void hasPermissionAsync(int session, int channelid, int perm, ::std::function<void (bool)> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void effectivePermissionsAsync(int session, int channelid, ::std::function<void (int)> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void addContextCallbackAsync(int session, ::std::string action, ::std::string text, ::std::shared_ptr<ServerContextCallbackPrx> cb, int ctx, ::std::function<void ()> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void removeContextCallbackAsync(::std::shared_ptr<ServerContextCallbackPrx> cb, ::std::function<void ()> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void getStateAsync(int session, ::std::function<void (const User &)> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void setStateAsync(Murmur::User state, ::std::function<void ()> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void getChannelStateAsync(int channelid, ::std::function<void (const Channel &)> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void setChannelStateAsync(Murmur::Channel state, ::std::function<void ()> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void addChannelAsync(::std::string name, int parent, ::std::function<void (int)> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void removeChannelAsync(int channelid, ::std::function<void ()> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void sendMessageChannelAsync(int channelid, bool tree, ::std::string text, ::std::function<void ()> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void getACLAsync(int channelid, ::std::function<void (const ACLList &, const GroupList &, bool)> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void setACLAsync(int channelid, Murmur::ACLList acls, Murmur::GroupList groups, bool inherit, ::std::function<void ()> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void addUserToGroupAsync(int channelid, int session, ::std::string group, ::std::function<void ()> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void removeUserFromGroupAsync(int channelid, int session, ::std::string group, ::std::function<void ()> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void redirectWhisperGroupAsync(int session, ::std::string source, ::std::string target, ::std::function<void ()> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void getUserIdsAsync(Murmur::NameList names, ::std::function<void (const IdMap &)> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void getUserNamesAsync(Murmur::IdList ids, ::std::function<void (const NameMap &)> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void registerUserAsync(Murmur::UserInfoMap info, ::std::function<void (int)> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void unregisterUserAsync(int userid, ::std::function<void ()> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void getRegistrationAsync(int userid, ::std::function<void (const UserInfoMap &)> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void updateRegistrationAsync(int userid, Murmur::UserInfoMap info, ::std::function<void ()> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void getRegisteredUsersAsync(::std::string filter, ::std::function<void (const NameMap &)> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void verifyPasswordAsync(::std::string name, ::std::string pw, ::std::function<void (int)> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void getTextureAsync(int userid, ::std::function<void (const Texture &)> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void setTextureAsync(int userid, Murmur::Texture tex, ::std::function<void ()> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void getUptimeAsync(::std::function<void (int)> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void updateCertificateAsync(::std::string certificate, ::std::string privateKey, ::std::string passphrase, ::std::function<void ()> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void startListeningAsync(int userid, int channelid, ::std::function<void ()> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void stopListeningAsync(int userid, int channelid, ::std::function<void ()> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void isListeningAsync(int userid, int channelid, ::std::function<void (bool)> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void getListeningChannelsAsync(int userid, ::std::function<void (const IntList &)> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void getListeningUsersAsync(int channelid, ::std::function<void (const IntList &)> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void ice_ping(const Ice::Current & current) const;
+};
 
+class MetaI : public Meta {
+    virtual void getSliceChecksumsAsync(::std::function<void (const ::Ice::SliceChecksumDict &)> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void getServerAsync(int id, ::std::function<void (const ::std::shared_ptr<ServerPrx> &)> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void newServerAsync(::std::function<void (const ::std::shared_ptr<ServerPrx> &)> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void getBootedServersAsync(::std::function<void (const ServerList &)> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void getAllServersAsync(::std::function<void (const ServerList &)> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void getDefaultConfAsync(::std::function<void (const ConfigMap &)> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void getVersionAsync(::std::function<void (int, int, int, const ::std::string &)> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void addCallbackAsync(::std::shared_ptr<MetaCallbackPrx> cb, ::std::function<void ()> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void removeCallbackAsync(::std::shared_ptr<MetaCallbackPrx> cb, ::std::function<void ()> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void getUptimeAsync(::std::function<void (int)> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+    
+    virtual void getSliceAsync(::std::function<void (const ::std::string &)> response, ::std::function<void (::std::exception_ptr)> exception, const ::Ice::Current & current);
+};
+
+#else // C++98 mapping
 class ServerI : virtual public Server {
 public:
 	virtual void isRunning_async(const ::Murmur::AMD_Server_isRunningPtr &, const Ice::Current &);
@@ -185,6 +324,6 @@ public:
 	virtual void getSlice_async(const ::Murmur::AMD_Meta_getSlicePtr &, const Ice::Current &);
 };
 
+#endif
 } // namespace Murmur
-
 #endif

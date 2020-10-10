@@ -44,6 +44,7 @@ option(optimize "Build a heavily optimized version, specific to the machine it's
 option(static "Build static binaries." OFF)
 option(symbols "Build binaries in a way that allows easier debugging." OFF)
 option(warnings-as-errors "All warnings are treated as errors." ON)
+option(cpp11 "Build with a minimum C++11 standard" OFF)
 
 option(dpkg-buildflags "Add CFLAGS, CXXFLAGS, CPPFLAGS and LDFLAGS from dpkg-buildflags to the build flags." OFF)
 
