@@ -32,6 +32,8 @@ set(MURMUR_SOURCES
 	"RPC.cpp"
 	"Server.cpp"
 	"Server.h"
+	"ServerConfig.cpp"
+	"ServerConfig.h"
 	"ServerDB.cpp"
 	"ServerDB.h"
 	"ServerUser.cpp"

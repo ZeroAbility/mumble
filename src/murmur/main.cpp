@@ -13,6 +13,7 @@
 #include "Meta.h"
 #include "SSL.h"
 #include "Server.h"
+#include "ServerConfig.h"
 #include "ServerDB.h"
 #include "Version.h"
 
@@ -41,6 +42,8 @@
 #else
 #	include <fcntl.h>
 #	include <sys/syslog.h>
+#	include <sys/stat.h>
+#	include <unistd.h>
 #endif
 
 QFile *qfLog = nullptr;
@@ -159,6 +162,25 @@ static void murmurMessageOutputWithContext(QtMsgType type, const QMessageLogCont
 	murmurMessageOutputQString(type, msg);
 }
 
+static const std::string checkDefaultConfig(const std::string &path, const std::string &name) {
+	auto murmur_config = std::make_shared<ServerConfig>();
+	
+	if (murmur_config->checkPath(path)) {
+		qInfo("Configuration directory already exists.");
+	} else {
+		qInfo("Creating configuration directory...");
+		murmur_config->createFolder(path);
+	}
+	
+	if (murmur_config->checkPath(path + name)) {
+		qInfo("Configuration file found. Loading configuration...");
+	} else {
+		qInfo("Configuration file not found. Creating...");
+		murmur_config->createFile(path + name);
+	}
+	return path + name;
+}
+
 #ifdef USE_ICE
 void IceParse(int &argc, char *argv[]);
 void IceStart();
@@ -213,7 +235,7 @@ int main(int argc, char **argv) {
 #endif
 	a.setApplicationName("Murmur");
 	a.setOrganizationName("Mumble");
-	a.setOrganizationDomain("mumble.sourceforge.net");
+	a.setOrganizationDomain("mumble.info");
 
 	MumbleSSL::initialize();
 
@@ -379,7 +401,6 @@ int main(int argc, char **argv) {
 #ifdef Q_OS_UNIX
 		} else if (arg == "-limits") {
 			detach = false;
-			Meta::mp.read(inifile);
 			unixhandler.setuid();
 			unixhandler.finalcap();
 			LimitTest::testLimits(a);
@@ -404,9 +425,32 @@ int main(int argc, char **argv) {
 		qFatal("SSL: this version of Murmur is built against Qt without SSL Support. Aborting.");
 	}
 
+	std::string config_path;
+	std::string ini_name = "murmur.ini";
+
 #ifdef Q_OS_UNIX
-	inifile = unixhandler.trySystemIniFiles(inifile);
+	if (!unixhandler.trySystemIniFiles(inifile).isEmpty()) {
+		qInfo("System configuration file found. Loading configuration...");
+		inifile = unixhandler.trySystemIniFiles(inifile);
+	} else {
+		if (getuid() == 0) {
+			config_path = "/etc/";
+			ini_name = "mumble-server.ini";
+		} else {
+			std::string home_dir = getenv("HOME");
+			config_path = home_dir + "/.murmurd/";
+		}
+	}
 #endif
+
+#ifdef Q_OS_WIN
+	std::string appdata = getenv("APPDATA");
+	config_path = appdata + "/Mumble/server/";
+#endif
+
+	if(inifile.isEmpty()) {
+		inifile = QString::fromStdString(checkDefaultConfig(config_path, ini_name));
+	}
 
 	Meta::mp.read(inifile);
 
